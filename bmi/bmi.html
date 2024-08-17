@@ -1,0 +1,164 @@
+<html>
+<head>
+  <style>
+    body {
+      background: url('bg.png');
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 20px auto;
+      border: 1px solid #ccc;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .form-group {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .form-group label {
+      width: 150px;
+      font-weight: bold;
+    }
+
+    .form-group input {
+      flex: 1;
+      padding: 5px;
+      border: 1px solid #ccc;
+    }
+
+    .form-group select {
+      flex: 1;
+      padding: 5px;
+      border: 1px solid #ccc;
+    }
+
+    .form-group button {
+      width: 100px;
+      padding: 10px;
+      background: #28a745;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+
+    .result {
+      margin-top: 20px;
+      padding: 10px;
+      background: #eee;
+      display: none;
+    }
+
+    .result p {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .result span {
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>BMI Calculator</h1>
+  <div class="container">
+    <form id="bmi-form">
+      <div class="form-group">
+        <label for="height">Height:</label>
+        <input type="number" id="height" min="0" step="0.01" required>
+        <select id="height-unit">
+          <option value="ft">Foot</option>
+          <option value="in">Inches</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="weight">Weight:</label>
+        <input type="number" id="weight" min="0" step="0.01" required>
+        <select id="height-unit">
+          <option value="kg">Kilograms</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <button type="submit" id="calculate">Calculate</button>
+      </div>
+    </form>
+    <div class="result" id="result">
+      <p>Your BMI is: <span id="bmi-value"></span></p>
+      <p>This means you are: <span id="bmi-category"></span></p>
+      <p>Suggestions: <span id="bmi-suggestion"></span></p>
+    </div>
+  </div>
+  <script>
+    // Get the form elements
+    var height = document.getElementById("height");
+    var weight = document.getElementById("weight");
+    var calculate = document.getElementById("calculate");
+    var result = document.getElementById("result");
+    var bmiValue = document.getElementById("bmi-value");
+    var bmiCategory = document.getElementById("bmi-category");
+    var bmiSuggestion = document.getElementById("bmi-suggestion");
+
+    // Add an event listener to the calculate button
+    calculate.addEventListener("click", function(e) {
+      // Prevent the default form submission
+      e.preventDefault();
+
+      // Get the height and weight values
+      var heightValue = parseFloat(height.value);
+      var weightValue = parseFloat(weight.value);
+
+      // Check if the values are valid
+      if (heightValue > 0 && weightValue > 0) {
+        // Convert the height to meters
+        var heightUnit = document.getElementById("height-unit").value;
+        if (heightUnit == "ft") {
+          heightValue /= 3.28084;
+        } else if (heightUnit == "in") {
+          heightValue /= 39.3701;
+        }
+
+        // Calculate the BMI
+        var bmi = weightValue / (heightValue * heightValue);
+
+        // Display the BMI value
+        bmiValue.textContent = bmi.toFixed(2);
+
+        // Display the BMI category and suggestion
+        if (bmi < 18.5) {
+          bmiCategory.textContent = "Underweight";
+          bmiSuggestion.textContent = "You should eat more and exercise moderately.";
+        } else if (bmi >= 18.5 && bmi < 25) {
+          bmiCategory.textContent = "Normal";
+          bmiSuggestion.textContent = "You are healthy, keep it up.";
+        } else if (bmi >= 25 && bmi < 30) {
+          bmiCategory.textContent = "Overweight";
+          bmiSuggestion.textContent = "You should eat less and exercise more.";
+        } else if (bmi >= 30) {
+          bmiCategory.textContent = "Obese";
+          bmiSuggestion.textContent = "You should consult a doctor and follow a strict diet and exercise plan.";
+        }
+
+        // Show the result div
+        result.style.display = "block";
+      } else {
+        // Hide the result div
+        result.style.display = "none";
+
+        // Alert the user to enter valid values
+        alert("Please enter valid height and weight values.");
+      }
+    });
+  </script>
+</body>
+</html>
